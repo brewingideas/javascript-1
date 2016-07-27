@@ -1,0 +1,131 @@
+* Learning JavaScript 
+
+** JavaScript testing  setups
+
+   Testing JavaScript written in different modular formats requires different setups. Here are a few setups worked well for me.
+
+*** Test node.js CommonJS modules with ~jasmine-npm~
+
+    Install ~jasmine-npm~ and configure the paths for specs and helpers in ~./spec/support/jasmine.json~. 
+
+    #+BEGIN_SRC sh
+    # install jasmine-npm
+    npm install --save-dev jasmine
+    #+END_SRC
+    
+    If your ~jasmine.json~ file is located in a different location, e.g. ~./tests/support/jasmine.json~, you can run
+    jasmine with ~jasmine JASMINE_CONFIG_PATH=tests/support/jasmine.json~.
+
+    #+BEGIN_SRC sh
+    # run tests
+    jasmine JASMINE_CONFIG_PATH=tests/support/jasmine.json
+    
+    # The above command can be configured in package.json as a npm run script 
+    # and called via grunt task runner through grunt-shell
+    # Then you can use the below command as a shortcut to run the tests
+    npm test
+    #+END_SRC
+    
+*** Test  AMD modules with ~karma~ and ~jasmine~
+
+    [[https://karma-runner.github.io][Karma]] is a popular test runner from Google. It is easy to setup and works with Jasmine and RequireJS out of
+    box. 
+
+    Install Karma and required modules:
+    #+BEGIN_SRC sh
+    npm install --save-dev requirejs karma karma-chrome-launcher karma-jasmine karma-requirejs
+    #+END_SRC
+
+    A Karma configuration files is placed under ~./tests/support/karma.conf.js~, and a bootstrap file for requirejs is
+    included in ~./tests/support/test-main.js~, where you have your ~require.config({})~ for karma tests.
+
+    To start karma server:
+    #+BEGIN_SRC sh
+    karma start tests/support/karma.conf.js
+    #+END_SRC
+
+    To run karma tests again when the karma server is active:
+    #+BEGIN_SRC sh
+    karma run tests/support/karma.conf.js
+    #+END_SRC
+
+    This is usually not necessary as karma watches all the source files and spec files automatically. 
+    
+    There is a shortcut npm run script for running karma is configured in ~package.json~ (same as with jasmine setup
+    above), it enables you to run karma tests with a shorter command:
+    #+BEGIN_SRC sh
+    npm run karma
+    #+END_SRC
+
+    There is a [[https://github.com/karma-runner/grunt-karma][grunt-karma]] plugin but I find running Karma with karma-cli and grunt-shell is a much faster alternative
+
+    1) Install ~karma-cli~
+
+       #+BEGIN_SRC sh
+       npm install -g karma-cli
+       #+END_SRC
+
+    2) Start Karma server
+
+       #+BEGIN_SRC sh
+       karma start tests/support/karma.conf.js
+       #+END_SRC
+
+    3) Run Karma through grunt-shell with other grunt tasks
+       #+BEGIN_SRC js
+       shell: {
+            options: {
+                stderr: true
+            }
+            karma: {
+                command: 'karma run tests/support/karma.conf.js'
+            }
+        }
+
+        grunt.loadNpmTasks('grunt-shell');
+
+        grunt.registerTask('default', ['jshint:all', 'shell:karma', '....']);
+       #+END_SRC
+       
+*** Test AMD or CommonJS modules with ~intern~
+    
+    ~intern~ is a very flexible JavaScript test stack, it can test code written in CommonJS modules and AMD modules, or
+    plain JavaScript objects. It also supports funtional tests through WebDrive compatible systems, such as SauceLabs or
+    BrowserStack.
+
+    Install intern:
+    #+BEGIN_SRC sh
+    npm install --save-dev intern
+    #+END_SRC
+
+    An intern configuration file is located under ~.tests/support/intern.js~.
+
+**** Unit test with intern
+
+     Similar to Karma, there is a grunt plugin for intern but you can run it through command line:
+     #+BEGIN_SRC sh
+     ./node_modules/.bin/intern-client config=tests/support/intern
+     #+END_SRC
+
+     The above command is configured in ~gruntfile.js~ and ~package.json~ with shortcuts (same as with how karma is configured).
+     #+BEGIN_SRC sh
+     # to run intern test from npm:
+     npm run intern
+
+     # to run intern as grunt task
+     grunt intern
+     #+END_SRC
+
+     Please see grunt configuration file and ~package.json~ for more details.
+
+**** Functional test with intern
+     
+     #+BEGIN_SRC sh
+     ./node_modules/.bin/intern-runner config=tests/support/intern
+     #+END_SRC
+
+     Again there is a shortcut set in package.json as a npm run script:
+     #+BEGIN_SRC sh
+     # to run intern test from npm
+     npm run functional-test
+     #+END_SRC

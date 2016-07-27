@@ -1,0 +1,35 @@
+{
+  "name": "javascript",
+  "version": "0.0.1",
+  "description": "Notes and code snippets on mastering JavaScript",
+  "scripts": {
+    "test": "jasmine JASMINE_CONFIG_PATH=tests/support/jasmine.json",
+    "karma": "karma start tests/support/karma.conf.js",
+    "intern": "./node_modules/.bin/intern-client config=tests/support/intern",
+    "functional-test": "./node_modules/.bin/intern-runner config=tests/support/intern"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elfoak/javascript.git"
+  },
+  "author": "Liwen Zhang",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/elfoak/javascript/issues"
+  },
+  "homepage": "https://github.com/elfoak/javascript#readme",
+  "devDependencies": {
+    "grunt": "^1.0.1",
+    "grunt-contrib-jshint": "^1.0.0",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-shell": "^1.3.0",
+    "intern": "^3.2.3",
+    "jasmine": "^2.4.1",
+    "karma": "^0.13.22",
+    "karma-chrome-launcher": "^1.0.1",
+    "karma-jasmine": "^1.0.2",
+    "karma-requirejs": "^1.0.0",
+    "requirejs": "^2.2.0"
+  },
+  "dependencies": {}
+}
